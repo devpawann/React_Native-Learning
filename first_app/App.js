@@ -1,3 +1,4 @@
+"use strict";
 import {StatusBar} from "expo-status-bar";
 import React, {useState} from "react";
 import {
@@ -7,49 +8,51 @@ import {
   Text,
   TextInput,
   View,
+  ScrollView,
+  FlatList,
 } from "react-native";
+import ListItem from "./components/ListItem";
+import InputArea from "./components/InputArea";
 
 export default function App() {
   const [totalTask, settotalTask] = useState([]);
-  const [task, settask] = useState("");
+  const [showModel, setshowModel] = useState(false);
 
-  function handleTextField(task) {
-    settask(task);
-  }
-  function btnPressHandle() {
-    settotalTask([...totalTask, task]);
+  function btnPressHandle(task) {
+    settotalTask([...totalTask, {key: Math.random().toString(), value: task}]);
     console.log(totalTask);
   }
 
+  function removeItem(taskId) {
+    let newTaskList = totalTask.filter(function (task) {
+      return task.key !== taskId;
+    });
+    console.log(newTaskList);
+    settotalTask(newTaskList);
+  }
+
   return (
-    <SafeAreaView style={style.main}>
-      <TextInput
-        placeholder="Hello World"
-        style={style.inputField}
-        value={task}
-        onChangeText={handleTextField}
+    <SafeAreaView>
+      <Button title="Add new Task" onPress={() => setshowModel(true)} />
+      <InputArea onAddGoal={btnPressHandle} showModel={showModel} />
+      <FlatList
+        style={style.list}
+        data={totalTask}
+        renderItem={(itemData) => (
+          <ListItem
+            id={itemData.item.key}
+            title={itemData.item.value}
+            onPressDelete={removeItem}
+          />
+        )}
       />
-      <Button title="Add" style={style.btn} onPress={btnPressHandle} />
     </SafeAreaView>
   );
 }
 
 const style = StyleSheet.create({
-  main: {
+  list: {
     padding: 20,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  inputField: {
-    padding: 14,
-    borderWidth: 2,
-    borderColor: "blue",
-    marginRight: 20,
-    //width: "80%",
-    flex: 1,
-  },
-  btn: {
-    padding: 20,
-    flex: 1,
+    marginBottom: 20,
   },
 });
