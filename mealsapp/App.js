@@ -2,11 +2,27 @@ import {StatusBar} from 'expo-status-bar';
 import {StyleSheet, Text, View} from 'react-native';
 import CategoriesScreen from "./screens/CategoriesScreen";
 import {NavigationContainer} from "@react-navigation/native";
-import {createNativeStackNavigator} from "react-native-screens/native-stack";
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import MealsList from "./screens/MealsList";
 import MealDetailScreen from "./screens/MealDetailScreen";
+import {createDrawerNavigator} from "@react-navigation/drawer";
+import FavouriteScreen from "./screens/FavouriteScreen";
 
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator()
+
+function CustomDrawerNavigation() {
+    return <Drawer.Navigator>
+        <Drawer.Screen
+            name="Meals Categories Screen"
+            component={CategoriesScreen}
+            options={{
+                title: "All Categories",
+
+            }}/>
+        <Drawer.Screen name="Favourite" component={FavouriteScreen}/>
+    </Drawer.Navigator>
+}
 
 export default function App() {
     return (
@@ -39,7 +55,7 @@ export default function App() {
                         //     }
                         // }}
                     />
-                    <Stack.Screen name="MealDetail" component={MealDetailScreen} options={{title:"Meal Detail"}}/>
+                    <Stack.Screen name="MealDetail" component={MealDetailScreen} options={{title: "Meal Detail"}}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </>
