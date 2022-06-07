@@ -5,5 +5,12 @@ class ExpenseModel {
     this.amount = amount;
     this.date = date;
   }
+  toJson() {
+    return {
+      title: this.title,
+      amount: this.amount,
+      date: this.date,
+    };
+  }
 }
 export default ExpenseModel;

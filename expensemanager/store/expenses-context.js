@@ -1,11 +1,11 @@
 import {createContext, useReducer} from 'react';
-import {DUMMY_EXPENSE} from '../constants/dummy';
 import React from 'react';
 
 const ACTION = {
   ADD: 'Add',
   UPDATE: 'Update',
   DELETE: 'Delete',
+  SET: 'Set',
 };
 
 export const ExpensesContext = createContext({
@@ -13,7 +13,13 @@ export const ExpensesContext = createContext({
   addExpense: expense => {},
   deleteExpense: id => {},
   updateExpense: expense => {},
+  setExpense: expenses => {},
 });
+
+/**
+ * Dispatcher calls reducer with action
+ * Based on action and current state Reducer throws new Fresh State
+ */
 
 function expenseReducer(state, action) {
   switch (action.type) {
@@ -34,22 +40,31 @@ function expenseReducer(state, action) {
       updatedState[updatableItemIndex] = updatedItem;
       return updatedState;
 
+    case ACTION.SET:
+      return action.payload.reverse();
+
     default:
       return state;
   }
 }
 
 export default function ExpensesContextProvider({children}) {
-  const [state, dispatch] = useReducer(expenseReducer, DUMMY_EXPENSE);
+  const [state, dispatch] = useReducer(expenseReducer, []);
 
   function addExpense(expenseData) {
     dispatch({type: ACTION.ADD, payload: expenseData});
   }
+
   function updateExpense(expenseData) {
     dispatch({type: ACTION.UPDATE, payload: expenseData});
   }
+
   function deleteExpense(id) {
     dispatch({type: ACTION.DELETE, payload: id});
+  }
+
+  function setExpense(expenses) {
+    dispatch({type: ACTION.SET, payload: expenses});
   }
 
   const value = {
@@ -57,6 +72,7 @@ export default function ExpensesContextProvider({children}) {
     addExpense: addExpense,
     deleteExpense: deleteExpense,
     updateExpense: updateExpense,
+    setExpense: setExpense,
   };
 
   return (

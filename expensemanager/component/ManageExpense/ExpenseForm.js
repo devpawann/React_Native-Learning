@@ -100,8 +100,7 @@ export default function ExpenseForm({
 
             if (amountIsValid && dateIsValid && titleIsValid) {
               const expenseModel = new ExpenseModel(
-                defaultExpense?.id ||
-                  '_' + Math.random().toString(36).substr(2, 9),
+                defaultExpense?.id,
                 inputValue[InputIdentifier.TITLE].value,
                 +inputValue[InputIdentifier.AMOUNT].value,
                 new Date(inputValue[InputIdentifier.DATE].value),

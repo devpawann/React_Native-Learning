@@ -14,6 +14,7 @@ export default function ItemExpenses({item}) {
   const navigation = useNavigation();
 
   function ExpensePressHandler() {
+    console.log(item.id);
     navigation.navigate('ManageExpenseScreen', {expenseId: item.id});
   }
   return (

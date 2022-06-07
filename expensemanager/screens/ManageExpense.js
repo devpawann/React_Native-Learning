@@ -4,6 +4,11 @@ import IconButton from '../component/IconButton';
 import {GlobalStyles} from '../constants/styles';
 import {ExpensesContext} from '../store/expenses-context';
 import ExpenseForm from '../component/ManageExpense/ExpenseForm';
+import {
+  deleteExpenseFromFirebase,
+  insertExpenseToFirebase,
+  updateExpenseOnFirebase,
+} from '../api/api';
 
 export default function ManageExpense({route, navigation}) {
   const editedExpenseId = route.params?.expenseId;
@@ -19,18 +24,21 @@ export default function ManageExpense({route, navigation}) {
     });
   }, [navigation, isEditingMode]);
 
-  function deleteExpenseHandler() {
+  async function deleteExpenseHandler() {
     context.deleteExpense(editedExpenseId);
+    await deleteExpenseFromFirebase(editedExpenseId);
     closeSheet();
   }
   function cancelExpenseHandler() {
     closeSheet();
   }
-  function confirmExpenseHandler(expense) {
+  async function confirmExpenseHandler(expense) {
     if (isEditingMode) {
       context.updateExpense(expense);
+      await updateExpenseOnFirebase(expense);
     } else {
-      context.addExpense(expense);
+      const id = await insertExpenseToFirebase(expense);
+      context.addExpense({...expense, id: id});
     }
 
     closeSheet();
