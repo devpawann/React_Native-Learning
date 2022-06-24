@@ -60,4 +60,4 @@ buck-out/
 /ios/Pods/
 /vendor/bundle/
 
-./secret_keys/keys.js
+/secret_keys/keys.js
